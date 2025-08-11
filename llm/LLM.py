@@ -115,3 +115,110 @@ print("pos_embeddings: ", pos_embeddings.shape)
 
 input_embeddings = token_embeddings + pos_embeddings
 print("input_embeddings: ", input_embeddings.shape)
+print("")
+
+###########################
+# Self-Attention mechanism
+###########################
+
+# Some dummy embedding values
+inputs = torch.tensor(
+    [
+        [0.43, 0.15, 0.89], # Your      (x^1)
+        [0.55, 0.87, 0.66], # journey   (x^2)
+        [0.57, 0.85, 0.64], # starts    (x^3)
+        [0.22, 0.58, 0.33], # with      (x^4)
+        [0.77, 0.25, 0.10], # one       (x^5)
+        [0.05, 0.80, 0.55]  # step      (x^6)
+    ]
+)
+
+# Example dot product:
+# Attention Score between the current token (x^2) and the current input token (x^1)
+#
+# x^2  * x^1
+# ====================
+# 0.55 * 0.43 = 0.2365
+# 0.87 * 0.15 = 0.1305
+# 0.66 * 0.89 = 0.5874
+# ====================
+#               0.9544
+
+# Calculate the attention score between the query token (x^2) and each other input token.
+# A higher value in the final attention score (calculated through the dot product), means
+# a greater alignment or similarity between the 2 input embedding vectors.
+# tensor([0.9544, 1.4950, 1.4754, 0.8434, 0.7070, 1.0865])
+query = inputs[1] # journey (x^2)
+attention_scores = torch.empty(inputs.shape[0])
+for i, x_i in enumerate(inputs):
+     attention_scores[i] = torch.dot(x_i, query)
+print("Attention scores: ", attention_scores)
+
+# Normalize the attention scores - they will sum up to 1.0
+# tensor([0.1455, 0.2278, 0.2249, 0.1285, 0.1077, 0.1656])
+attention_weights1 = attention_scores / attention_scores.sum()
+print("Attention weights: ", attention_weights1)
+print("Sum: ", attention_weights1.sum())
+
+# Normalize the attention scores with the softmax function
+# tensor([0.1385, 0.2379, 0.2333, 0.1240, 0.1082, 0.1581]
+attention_weights2 = torch.softmax(attention_scores, dim=0)
+print("Attention weights: ", attention_weights2)
+print("Sum: ", attention_weights2.sum())
+
+# Calculating the context vector
+# =>  tensor(0.1385) => attention weight
+# =>  tensor([0.4300, 0.1500, 0.8900]) => embeddings of "Your" (x^1)
+# 0.43 * 0.1385 = 0.059555
+# 0.15 * 0.1385 = 0.020775
+# 0.89 * 0.1385 = 0.123265
+
+# =>  tensor(0.2379) => attention weight
+# =>  tensor([0.5500, 0.8700, 0.6600]) => embeddings of "yourney" (x^2)
+# 0.55 * 0.2379 = 0.130845
+# 0.87 * 0.2379 = 0.206973
+# 0.66 * 0.2379 = 0.157014
+
+# =>  tensor(0.2333) => attention weight
+# =>  tensor([0.5700, 0.8500, 0.6400]) => embeddings of "starts" (x^3)
+# 0.57 * 0.2333 = 0.132981
+# 0.85 * 0.2333 = 0.198305
+# 0.64 * 0.2333 = 0.149312
+
+# =>  tensor(0.1240) => attention weight
+# =>  tensor([0.2200, 0.5800, 0.3300]) => embeddings of "with" (x^4)
+# 0.22 * 0.1240 = 0.02728 
+# 0.58 * 0.1240 = 0.07192
+# 0.33 * 0.1240 = 0.04092
+
+# =>  tensor(0.1082) => attention weight
+# =>  tensor([0.7700, 0.2500, 0.1000]) => embeddings of "one" (x^5)
+# 0.77 * 0.1082 = 0.083314
+# 0.25 * 0.1082 = 0.02705
+# 0.10 * 0.1082 = 0.01082
+
+# =>  tensor(0.1581) => attention weight
+# =>  tensor([0.0500, 0.8000, 0.5500]) => embeddings of "step" (x^6)
+# 0.05 * 0.1581 = 0.007905 
+# 0.80 * 0.1581 = 0.12648
+# 0.55 * 0.1581 = 0.086955
+
+# Final sums:
+#   0.059555    0.020775    0.123265
+# + 0.130845    0.206973    0.157014
+# + 0.132981    0.198305    0.149312
+# + 0.02728     0.07192     0.04092
+# + 0.083314    0.02705     0.01082
+# + 0.007905    0.12648     0.086955
+# ===================================
+#.  0.44188.    0.651503.   0.568286
+
+# tensor([0.4419, 0.6515, 0.5683])
+context_vector = torch.zeros(query.shape)
+for i, x_i in enumerate(inputs):
+     context_vector += attention_weights2[i] * x_i
+     print("=> ", attention_weights2[i])
+     print("=> ", x_i)
+     print("")
+
+print("Context Vector: ", context_vector)
