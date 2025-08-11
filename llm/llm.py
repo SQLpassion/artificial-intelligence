@@ -1,3 +1,4 @@
+from SimpleTokenizer import SimpleTokenizer
 from pathlib import Path
 import re
 
@@ -17,9 +18,10 @@ print("Total number of tokens: ", len(preprocessed))
 print(preprocessed[:30])
 
 # Create the vocabulary and assign to each unique word a token ID
-all_words = sorted(set(preprocessed))
-vocabulary_size = len(all_words)
-vocabulary = {token:integer for integer, token in enumerate(all_words)}
+all_tokens = sorted(list(set(preprocessed)))
+all_tokens.extend(["<|endoftext|>", "<|unknown|>"])
+vocabulary_size = len(all_tokens)
+vocabulary = {token:integer for integer, token in enumerate(all_tokens)}
 print("Vocabulary size: ", vocabulary_size)
 
 # Print out the first 50 entries with their token IDs
@@ -28,3 +30,26 @@ for i, item in enumerate(vocabulary.items()):
 
      if i >= 50:
           break
+
+# Print out the last 5 tokens.
+# It will include the special tokens "<|endoftext|>" and "<|unknown|>"
+for i, item in enumerate(list(vocabulary.items())[-5:]):
+     print(item)
+     
+# Use the SimpleTokenizer class
+tokenizer = SimpleTokenizer(vocabulary)
+text = """"It's the last he painted, you know,"
+    Mrs. Gisburn said with pardonable pride."""
+ids = tokenizer.encode(text)
+print(ids)
+print(tokenizer.decode(ids))
+print("")
+
+# Working with the special tokens "<|endoftext|>"
+# and "<|unknown|>"
+text1 = "Hello, do you like tea?"               # "Hello" is not part of the vocabulary
+text2 = "In the sunlit terraces of the palace." # "palace" is not part of the vocabulary
+text = " <|endoftext|> ".join((text1, text2))
+print(text)
+print(tokenizer.encode(text))
+print(tokenizer.decode(tokenizer.encode(text)))
