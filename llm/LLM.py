@@ -117,9 +117,13 @@ input_embeddings = token_embeddings + pos_embeddings
 print("input_embeddings: ", input_embeddings.shape)
 print("")
 
-###########################
-# Self-Attention mechanism
-###########################
+###################################
+# Part 2: Self-Attention mechanism
+###################################
+
+#############################################
+# Compute Attention Weights for just 1 input
+#############################################
 
 # Some dummy embedding values
 inputs = torch.tensor(
@@ -149,9 +153,11 @@ inputs = torch.tensor(
 # a greater alignment or similarity between the 2 input embedding vectors.
 # tensor([0.9544, 1.4950, 1.4754, 0.8434, 0.7070, 1.0865])
 query = inputs[1] # journey (x^2)
+
 attention_scores = torch.empty(inputs.shape[0])
 for i, x_i in enumerate(inputs):
      attention_scores[i] = torch.dot(x_i, query)
+     
 print("Attention scores: ", attention_scores)
 
 # Normalize the attention scores - they will sum up to 1.0
@@ -163,7 +169,7 @@ print("Sum: ", attention_weights1.sum())
 # Normalize the attention scores with the softmax function
 # tensor([0.1385, 0.2379, 0.2333, 0.1240, 0.1082, 0.1581]
 attention_weights2 = torch.softmax(attention_scores, dim=0)
-print("Attention weights: ", attention_weights2)
+print("Attention weights (softmax): ", attention_weights2)
 print("Sum: ", attention_weights2.sum())
 
 # Calculating the context vector
@@ -211,14 +217,66 @@ print("Sum: ", attention_weights2.sum())
 # + 0.083314    0.02705     0.01082
 # + 0.007905    0.12648     0.086955
 # ===================================
-#.  0.44188.    0.651503.   0.568286
+#.  0.44188     0.651503    0.568286
 
 # tensor([0.4419, 0.6515, 0.5683])
 context_vector = torch.zeros(query.shape)
 for i, x_i in enumerate(inputs):
      context_vector += attention_weights2[i] * x_i
-     print("=> ", attention_weights2[i])
-     print("=> ", x_i)
+     print("=> Attention Weight: ", attention_weights2[i])
+     print("=> Token Embeddings: ", x_i)
+     print("=> Context Weight:   ", attention_weights2[i] * x_i)
      print("")
 
-print("Context Vector: ", context_vector)
+print("Final Context Vector: ", context_vector)
+print("")
+
+###########################################
+# Compute Attention Weights for all inputs
+###########################################
+
+# Compute the attention weights for each input
+# with 2 nested loops
+attention_scores = torch.empty(6, 6)
+
+for i, x_i in enumerate(inputs):
+     for j, x_j in enumerate(inputs):
+        attention_scores[i, j] = torch.dot(x_i, x_j)
+
+print("Attention scores: ", attention_scores)
+
+# Compute the attention weights just with a simple
+# matrix multiplication
+attention_scores = inputs @ inputs.T
+print("Attention scores: ", attention_scores)
+
+# Normalize the attention scores
+# We want to perform the normalization across the last dimension (dim=-1)
+attention_weights3 = torch.softmax(attention_scores, dim=-1)
+print("Attention weights: ", attention_weights3)
+
+# Check if all rows are summing up to 1.0
+print("All row sums: ", attention_weights3.sum(dim=-1))
+
+# Calculate all context vectors
+all_context_vectors = attention_weights3 @ inputs
+print("All context vectors: ", all_context_vectors)
+
+#  RUNTIME PERFORMANCE METRICS
+# def attention_fn(inputs):
+#     attention_scores = inputs @ inputs.T
+#     attention_weights3 = torch.softmax(attention_scores, dim=-1)
+#     all_context_vectors = attention_weights3 @ inputs
+#     return all_context_vectors
+
+# import torch.fx as fx
+
+# gm = fx.symbolic_trace(attention_fn)
+# gm.graph.print_tabular()
+
+# with torch.autograd.profiler.profile(record_shapes=True) as prof:
+#     attention_scores = inputs @ inputs.T
+#     attention_weights3 = torch.softmax(attention_scores, dim=-1)
+#     all_context_vectors = attention_weights3 @ inputs
+
+# print(prof.key_averages().table(sort_by="cpu_time_total"))

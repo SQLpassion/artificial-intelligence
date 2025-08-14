@@ -1,0 +1,32 @@
+flowchart TD
+    A["inputs (placeholder)"] --> B["getattr_1: inputs.T"]
+    A --> C["matmul: inputs @ inputs.T"]
+    B --> C
+    C --> D["softmax(dim=-1)"]
+    D --> E["matmul_1: softmax @ inputs"]
+    A --> E
+    E --> F["output"]
+    
+    subgraph "PyTorch Operations Performance"
+        G["aten::numpy_T<br/>53.22% - 156.907μs"]
+        H["aten::permute<br/>33.99% - 100.202μs"]
+        I["aten::softmax<br/>0.83% - 2.457μs"]
+        J["aten::_softmax<br/>6.49% - 19.124μs"]
+        K["aten::matmul<br/>0.83% - 2.459μs<br/>2 calls"]
+        L["aten::mm<br/>3.83% - 11.290μs<br/>2 calls"]
+    end
+    
+    subgraph "Execution Order"
+        M["Transpose inputs.T"] --> N["Matrix Multiply attention scores"]
+        N --> O["Softmax attention weights"]
+        O --> P["Matrix Multiply context vectors"]
+    end
+    
+    style A fill:#e1f5fe,color:#000
+    style F fill:#c8e6c9,color:#000
+    style G fill:#f8bbd9,color:#000
+    style H fill:#e8f5e8,color:#000
+    style I fill:#fff9c4,color:#000
+    style J fill:#e1bee7,color:#000
+    style K fill:#ffcc80,color:#000
+    style L fill:#b3e5fc,color:#000
