@@ -1,3 +1,4 @@
+from SelfAttention import SelfAttention
 from torch.utils.data import DataLoader
 from GPTDataset import GPTDataset
 from pathlib import Path
@@ -261,6 +262,8 @@ print("All row sums: ", attention_weights3.sum(dim=-1))
 # Calculate all context vectors
 all_context_vectors = attention_weights3 @ inputs
 print("All context vectors: ", all_context_vectors)
+print("")
+print("")
 
 #  RUNTIME PERFORMANCE METRICS
 # def attention_fn(inputs):
@@ -280,3 +283,67 @@ print("All context vectors: ", all_context_vectors)
 #     all_context_vectors = attention_weights3 @ inputs
 
 # print(prof.key_averages().table(sort_by="cpu_time_total"))
+
+########################################
+# Self Attention with Trainable Weights
+########################################
+print("######################################")
+print("Self Attention with Trainable Weights")
+print("######################################")
+
+# Some dummy embedding values
+inputs = torch.tensor(
+    [
+        [0.43, 0.15, 0.89], # Your      (x^1)
+        [0.55, 0.87, 0.66], # journey   (x^2)
+        [0.57, 0.85, 0.64], # starts    (x^3)
+        [0.22, 0.58, 0.33], # with      (x^4)
+        [0.77, 0.25, 0.10], # one       (x^5)
+        [0.05, 0.80, 0.55]  # step      (x^6)
+    ]
+)
+
+# Some variable definitions
+x2 = inputs[1]           # journey (x^2)
+d_in = inputs.shape[1]   # Input Embedding Size: 3
+d_out = 2                # Output Embedding Size: 2
+
+# Weight matrix definitions
+torch.manual_seed(123)
+weight_query = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad = False)    # 3 x 2
+weight_key = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad = False)      # 3 x 2
+weight_value = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad = False)    # 3 x 2
+
+# Compute the query, key, and value vectors for x^2
+query2 = x2 @ weight_query
+key2 = x2 @ weight_key
+value2 = x2 @ weight_value
+
+# Compute the key and value vectors for all input elements
+keys = inputs @ weight_key
+values = inputs @ weight_value
+print("keys.shape: ", keys.shape)
+print("values.shape: ", values.shape)
+
+# Compute one specific attention score: w22
+keys2 = keys[1]
+attention_score22 = query2.dot(keys2)
+print("Attention score w22: ", attention_score22)
+
+# Compute all attention scores for a given query
+attention_scores2 = query2 @ keys.T
+print("All Attention scores: ", attention_scores2)
+
+# Compute the attention weights
+d_k = keys.shape[-1]
+attention_weights2 = torch.softmax(attention_scores2 / d_k ** 0.5, dim = -1)
+print(attention_weights2)
+
+# Compute the context vector
+context_vector2 = attention_weights2 @ values
+print("Context vector: ", context_vector2)
+
+# Use the SelfAttention class
+torch.manual_seed(789)
+self_attention = SelfAttention(d_in, d_out)
+print("Self Attention: ", self_attention(inputs))
