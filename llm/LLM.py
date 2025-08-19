@@ -347,3 +347,51 @@ print("Context vector: ", context_vector2)
 torch.manual_seed(789)
 self_attention = SelfAttention(d_in, d_out)
 print("Self Attention: ", self_attention(inputs))
+print("")
+
+####################################
+# Self Attention - Casual Attention
+####################################
+print("##################################")
+print("Self Attention - Casual Attention")
+print("##################################")
+
+queries = self_attention.W_query(inputs)
+keys = self_attention.W_key(inputs)
+attention_scores = queries @ keys.T
+attention_weights = torch.softmax(attention_scores / keys.shape[-1] ** 0.5, dim = -1)
+print(attention_weights)
+
+# Create a mask where the values above the diagonal are zeros
+context_length = attention_scores.shape[0]
+mask_simple = torch.tril(torch.ones(context_length, context_length))
+print(mask_simple)
+
+# Zero out all weights above the diagonal
+masked_simple = attention_weights * mask_simple
+print(masked_simple)
+
+# Renormalize the attention weights
+row_sums = masked_simple.sum(dim = -1, keepdim = True)
+masked_simple_normalized = masked_simple / row_sums
+print(masked_simple_normalized)
+
+# Attention weights with Dropout
+torch.manual_seed(123)
+dropout = torch.nn.Dropout(0.5)
+example = torch.ones(6, 6)
+print(dropout(example))
+
+# Apply the dropout to the attention weight matrix
+torch.manual_seed(123)
+print(dropout(masked_simple_normalized))
+print("")
+
+#########################
+# Casual Attention Class
+#########################
+print("#######################")
+print("Casual Attention Class")
+print("#######################")
+batch = torch.stack((inputs, inputs), dim = 0)
+print(batch.shape)
