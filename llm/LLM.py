@@ -1,4 +1,5 @@
 from SelfAttention import SelfAttention
+from CasualAttention import CasualAttention
 from torch.utils.data import DataLoader
 from GPTDataset import GPTDataset
 from pathlib import Path
@@ -395,3 +396,10 @@ print("Casual Attention Class")
 print("#######################")
 batch = torch.stack((inputs, inputs), dim = 0)
 print(batch.shape)
+
+# Use the CasualAttention class
+torch.manual_seed(123)
+context_length = batch.shape[1]
+casual_attention = CasualAttention(d_in, d_out, context_length, 0.0)
+context_vectors = casual_attention(batch)
+print("context_vectors.shape: ", context_vectors.shape)
