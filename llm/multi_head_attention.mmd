@@ -1,0 +1,19 @@
+flowchart TD
+    A["Input x (b, num_tokens, d_in)"] --> B1["W_query (Linear)"]
+    A --> B2["W_key (Linear)"]
+    A --> B3["W_value (Linear)"]
+    B1 --> C1["view: (b, num_tokens, num_heads, head_dim)"]
+    B2 --> C2["view: (b, num_tokens, num_heads, head_dim)"]
+    B3 --> C3["view: (b, num_tokens, num_heads, head_dim)"]
+    C1 --> D1["transpose: (b, num_heads, num_tokens, head_dim)"]
+    C2 --> D2["transpose: (b, num_heads, num_tokens, head_dim)"]
+    C3 --> D3["transpose: (b, num_heads, num_tokens, head_dim)"]
+    D1 --> E["Attention Scores: queries @ keys^T"]
+    D2 --> E
+    E --> F["Maskierung, Softmax, Dropout"]
+    D3 --> G["Context: (attention_weights @ values)"]
+    F --> G
+    G --> H["transpose: (b, num_tokens, num_heads, head_dim)"]
+    H --> I["view: (b, num_tokens, d_out)"]
+    I --> J["out_projection (Linear)"]
+    J --> K["Output: context_vector (b, num_tokens, d_out)"]

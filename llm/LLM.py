@@ -1,4 +1,5 @@
 from MultiHeadAttentionWrapper import MultiHeadAttentionWrapper
+from MultiHeadAttention import MultiHeadAttention
 from SelfAttention import SelfAttention
 from CasualAttention import CasualAttention
 from torch.utils.data import DataLoader
@@ -428,7 +429,24 @@ multi_head_attention = MultiHeadAttentionWrapper(d_in, d_out, context_length, 0.
 context_vectors = multi_head_attention(batch)
 print(context_vectors)
 print("context_vectors.shape: ", context_vectors.shape)
+print("")
 
 # Visualization of the model
-dot = make_dot(context_vectors, params=dict(multi_head_attention.named_parameters()))
-dot.render("multi_head_attention_graph", format="png")
+# dot = make_dot(context_vectors, params=dict(multi_head_attention.named_parameters()))
+# dot.render("multi_head_attention_graph", format="png")
+
+#######################
+# Multi-Head Attention
+#######################
+print("###########################")
+print("Multi-Head Attention Class")
+print("###########################")
+
+torch.manual_seed(123)
+batch_size, context_length, d_in = batch.shape
+d_out = 2
+multi_head_attention = MultiHeadAttention(d_in, d_out, context_length, 0.0, num_heads = 2)
+context_vectors = multi_head_attention(batch)
+print(context_vectors)
+print("context_vectors.shape: ", context_vectors.shape)
+print("")
