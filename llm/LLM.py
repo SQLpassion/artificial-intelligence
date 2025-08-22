@@ -1,6 +1,8 @@
+from MultiHeadAttentionWrapper import MultiHeadAttentionWrapper
 from SelfAttention import SelfAttention
 from CasualAttention import CasualAttention
 from torch.utils.data import DataLoader
+from torchviz import make_dot
 from GPTDataset import GPTDataset
 from pathlib import Path
 import tiktoken
@@ -394,6 +396,7 @@ print("")
 print("#######################")
 print("Casual Attention Class")
 print("#######################")
+
 batch = torch.stack((inputs, inputs), dim = 0)
 print(batch.shape)
 
@@ -403,3 +406,29 @@ context_length = batch.shape[1]
 casual_attention = CasualAttention(d_in, d_out, context_length, 0.0)
 context_vectors = casual_attention(batch)
 print("context_vectors.shape: ", context_vectors.shape)
+print("")
+
+# Visualization of the model
+# dot = make_dot(context_vectors, params=dict(casual_attention.named_parameters()))
+# dot.render("casual_attention_graph", format="png")
+
+#######################
+# Multi-Head Attention
+#######################
+print("###########################")
+print("Multi-Head Attention Class")
+print("###########################")
+
+torch.manual_seed(123)
+context_length = batch.shape[1] # Number of tokens
+d_in, d_out = 3, 2
+batch = torch.stack((inputs, inputs), dim = 0)
+
+multi_head_attention = MultiHeadAttentionWrapper(d_in, d_out, context_length, 0.0, num_heads = 2)
+context_vectors = multi_head_attention(batch)
+print(context_vectors)
+print("context_vectors.shape: ", context_vectors.shape)
+
+# Visualization of the model
+dot = make_dot(context_vectors, params=dict(multi_head_attention.named_parameters()))
+dot.render("multi_head_attention_graph", format="png")

@@ -1,0 +1,71 @@
+digraph {
+	graph [size="12,12"]
+	node [align=left fontname=monospace fontsize=10 height=0.2 ranksep=0.1 shape=box style=filled]
+	4819029664 [label="
+ (2, 6, 2)" fillcolor=darkolivegreen1]
+	5275795024 [label=UnsafeViewBackward0]
+	5275795072 -> 5275795024
+	5275795072 [label=BmmBackward0]
+	5275794880 -> 5275795072
+	5275794880 [label=ViewBackward0]
+	5275960512 -> 5275794880
+	5275960512 [label=ExpandBackward0]
+	5275960608 -> 5275960512
+	5275960608 [label=SoftmaxBackward0]
+	5275960464 -> 5275960608
+	5275960464 [label=DivBackward0]
+	5275960368 -> 5275960464
+	5275960368 [label=MaskedFillBackward0]
+	5275960272 -> 5275960368
+	5275960272 [label=UnsafeViewBackward0]
+	5275960176 -> 5275960272
+	5275960176 [label=BmmBackward0]
+	5275960080 -> 5275960176
+	5275960080 [label=ViewBackward0]
+	5275959936 -> 5275960080
+	5275959936 [label=ExpandBackward0]
+	5275959840 -> 5275959936
+	5275959840 [label=UnsafeViewBackward0]
+	5275959744 -> 5275959840
+	5275959744 [label=MmBackward0]
+	5275959504 -> 5275959744
+	5275959504 [label=TBackward0]
+	5275959408 -> 5275959504
+	4819037504 [label="W_query.weight
+ (2, 3)" fillcolor=lightblue]
+	4819037504 -> 5275959408
+	5275959408 [label=AccumulateGrad]
+	5275960128 -> 5275960176
+	5275960128 [label=ReshapeAliasBackward0]
+	5275959792 -> 5275960128
+	5275959792 [label=ExpandBackward0]
+	5275959456 -> 5275959792
+	5275959456 [label=TransposeBackward0]
+	5275959360 -> 5275959456
+	5275959360 [label=UnsafeViewBackward0]
+	5275960752 -> 5275959360
+	5275960752 [label=MmBackward0]
+	5275960848 -> 5275960752
+	5275960848 [label=TBackward0]
+	5275960944 -> 5275960848
+	4819033584 [label="W_key.weight
+ (2, 3)" fillcolor=lightblue]
+	4819033584 -> 5275960944
+	5275960944 [label=AccumulateGrad]
+	5275794736 -> 5275795072
+	5275794736 [label=ViewBackward0]
+	5275960656 -> 5275794736
+	5275960656 [label=ExpandBackward0]
+	5275960320 -> 5275960656
+	5275960320 [label=UnsafeViewBackward0]
+	5275959648 -> 5275960320
+	5275959648 [label=MmBackward0]
+	5275959552 -> 5275959648
+	5275959552 [label=TBackward0]
+	5275960032 -> 5275959552
+	4819033424 [label="W_value.weight
+ (2, 3)" fillcolor=lightblue]
+	4819033424 -> 5275960032
+	5275960032 [label=AccumulateGrad]
+	5275795024 -> 4819029664
+}

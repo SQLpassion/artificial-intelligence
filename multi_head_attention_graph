@@ -1,0 +1,138 @@
+digraph {
+	graph [size="19.05,19.05"]
+	node [align=left fontname=monospace fontsize=10 height=0.2 ranksep=0.1 shape=box style=filled]
+	5560393360 [label="
+ (2, 6, 4)" fillcolor=darkolivegreen1]
+	5576687776 [label=CatBackward0]
+	5576689936 -> 5576687776
+	5576689936 [label=UnsafeViewBackward0]
+	5576687680 -> 5576689936
+	5576687680 [label=BmmBackward0]
+	5576690080 -> 5576687680
+	5576690080 [label=ViewBackward0]
+	5576690272 -> 5576690080
+	5576690272 [label=ExpandBackward0]
+	5576690368 -> 5576690272
+	5576690368 [label=SoftmaxBackward0]
+	5576690464 -> 5576690368
+	5576690464 [label=DivBackward0]
+	5576690560 -> 5576690464
+	5576690560 [label=MaskedFillBackward0]
+	5576690656 -> 5576690560
+	5576690656 [label=UnsafeViewBackward0]
+	5576690752 -> 5576690656
+	5576690752 [label=BmmBackward0]
+	5576690848 -> 5576690752
+	5576690848 [label=ViewBackward0]
+	5576690992 -> 5576690848
+	5576690992 [label=ExpandBackward0]
+	5576691088 -> 5576690992
+	5576691088 [label=UnsafeViewBackward0]
+	5576691184 -> 5576691088
+	5576691184 [label=MmBackward0]
+	5576691280 -> 5576691184
+	5576691280 [label=TBackward0]
+	5576691376 -> 5576691280
+	5561786080 [label="heads.0.W_query.weight
+ (2, 3)" fillcolor=lightblue]
+	5561786080 -> 5576691376
+	5576691376 [label=AccumulateGrad]
+	5576690800 -> 5576690752
+	5576690800 [label=ReshapeAliasBackward0]
+	5576691136 -> 5576690800
+	5576691136 [label=ExpandBackward0]
+	5576691328 -> 5576691136
+	5576691328 [label=TransposeBackward0]
+	5576691568 -> 5576691328
+	5576691568 [label=UnsafeViewBackward0]
+	5576691664 -> 5576691568
+	5576691664 [label=MmBackward0]
+	5576691760 -> 5576691664
+	5576691760 [label=TBackward0]
+	5576691856 -> 5576691760
+	5561788000 [label="heads.0.W_key.weight
+ (2, 3)" fillcolor=lightblue]
+	5561788000 -> 5576691856
+	5576691856 [label=AccumulateGrad]
+	5576689792 -> 5576687680
+	5576689792 [label=ViewBackward0]
+	5576690416 -> 5576689792
+	5576690416 [label=ExpandBackward0]
+	5576690608 -> 5576690416
+	5576690608 [label=UnsafeViewBackward0]
+	5576690176 -> 5576690608
+	5576690176 [label=MmBackward0]
+	5576691232 -> 5576690176
+	5576691232 [label=TBackward0]
+	5576690896 -> 5576691232
+	5560490704 [label="heads.0.W_value.weight
+ (2, 3)" fillcolor=lightblue]
+	5560490704 -> 5576690896
+	5576690896 [label=AccumulateGrad]
+	5576689840 -> 5576687776
+	5576689840 [label=UnsafeViewBackward0]
+	5576690320 -> 5576689840
+	5576690320 [label=BmmBackward0]
+	5576690704 -> 5576690320
+	5576690704 [label=ViewBackward0]
+	5576691808 -> 5576690704
+	5576691808 [label=ExpandBackward0]
+	5576690224 -> 5576691808
+	5576690224 [label=SoftmaxBackward0]
+	5576691952 -> 5576690224
+	5576691952 [label=DivBackward0]
+	5576692048 -> 5576691952
+	5576692048 [label=MaskedFillBackward0]
+	5576692144 -> 5576692048
+	5576692144 [label=UnsafeViewBackward0]
+	5576692240 -> 5576692144
+	5576692240 [label=BmmBackward0]
+	5576692336 -> 5576692240
+	5576692336 [label=ViewBackward0]
+	5576692480 -> 5576692336
+	5576692480 [label=ExpandBackward0]
+	5576692576 -> 5576692480
+	5576692576 [label=UnsafeViewBackward0]
+	5576692672 -> 5576692576
+	5576692672 [label=MmBackward0]
+	5576692768 -> 5576692672
+	5576692768 [label=TBackward0]
+	5576692864 -> 5576692768
+	5576795024 [label="heads.1.W_query.weight
+ (2, 3)" fillcolor=lightblue]
+	5576795024 -> 5576692864
+	5576692864 [label=AccumulateGrad]
+	5576692288 -> 5576692240
+	5576692288 [label=ReshapeAliasBackward0]
+	5576692624 -> 5576692288
+	5576692624 [label=ExpandBackward0]
+	5576692816 -> 5576692624
+	5576692816 [label=TransposeBackward0]
+	5576692912 -> 5576692816
+	5576692912 [label=UnsafeViewBackward0]
+	5576693008 -> 5576692912
+	5576693008 [label=MmBackward0]
+	5576693104 -> 5576693008
+	5576693104 [label=TBackward0]
+	5576693200 -> 5576693104
+	5576795344 [label="heads.1.W_key.weight
+ (2, 3)" fillcolor=lightblue]
+	5576795344 -> 5576693200
+	5576693200 [label=AccumulateGrad]
+	5576690512 -> 5576690320
+	5576690512 [label=ViewBackward0]
+	5576692000 -> 5576690512
+	5576692000 [label=ExpandBackward0]
+	5576692096 -> 5576692000
+	5576692096 [label=UnsafeViewBackward0]
+	5576691040 -> 5576692096
+	5576691040 [label=MmBackward0]
+	5576692720 -> 5576691040
+	5576692720 [label=TBackward0]
+	5576692384 -> 5576692720
+	5576795584 [label="heads.1.W_value.weight
+ (2, 3)" fillcolor=lightblue]
+	5576795584 -> 5576692384
+	5576692384 [label=AccumulateGrad]
+	5576687776 -> 5560393360
+}
