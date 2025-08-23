@@ -450,3 +450,9 @@ context_vectors = multi_head_attention(batch)
 print(context_vectors)
 print("context_vectors.shape: ", context_vectors.shape)
 print("")
+
+# Start TensorBoard: tensorboard --logdir=runs
+# from torch.utils.tensorboard import SummaryWriter
+# writer = SummaryWriter()
+# writer.add_scalar('example', 3)
+# writer.close()
