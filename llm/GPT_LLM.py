@@ -1,5 +1,6 @@
-from DummyGPTModel import DummyGPTModel
 from LayerNormalization import LayerNormalization
+from DummyGPTModel import DummyGPTModel
+from FeedForward import FeedForward
 import torch.nn as nn
 import tiktoken
 import torch
@@ -73,3 +74,16 @@ mean = out_ln.mean(dim = -1, keepdim = True)
 variance = out_ln.var(dim = -1, unbiased = False, keepdim = True)
 print("Mean:", mean)
 print("Variance: ", variance)
+print("")
+
+#######################
+# Feed Forward Network
+#######################
+print("#####################")
+print("Feed Forward Network")
+print("#####################")
+ffn = FeedForward(GPT_CONFIG_124M)
+print(ffn)
+x = torch.rand(2, 3, 768)
+output = ffn(x)
+print(output.shape)
