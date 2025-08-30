@@ -2,6 +2,7 @@ from LayerNormalization import LayerNormalization
 from TransformerBlock import TransformerBlock
 from DummyGPTModel import DummyGPTModel
 from FeedForward import FeedForward
+from GPTModel import GPTModel
 import torch.nn as nn
 import tiktoken
 import torch
@@ -104,3 +105,69 @@ output = block(x)
 print("Input shape: ", x.shape)
 print("Output shape: ", output.shape)
 print("")
+
+############
+# GPT Model
+############
+print("##########")
+print("GPT Model")
+print("##########")
+
+# A simple text generation loop
+def generate_text_simple(model, idx, max_new_tokens, context_size):
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        
+        # Deactivates the gradient tracking, which is not needed during the generation phase
+        with torch.no_grad():
+            logits = model(idx_cond)
+
+        logits = logits[:, -1, :]
+        probabilities = torch.softmax(logits, dim = -1)
+        idx_next = torch.argmax(probabilities, dim = -1, keepdim = True)
+        idx = torch.cat((idx, idx_next), dim = 1)
+
+    return idx
+
+# Prepare some tokens as input
+tokenizer = tiktoken.get_encoding("gpt2")
+batch = []
+text1 = "Every effort moves you"
+text2 = "Every day holds a"
+batch.append(torch.tensor(tokenizer.encode(text1)))
+batch.append(torch.tensor(tokenizer.encode(text2)))
+batch = torch.stack(batch, dim = 0)
+
+# Run the GPT model
+torch.manual_seed(123)
+model = GPTModel(GPT_CONFIG_124M)
+print(model)
+output = model(batch)
+print("Input Batch: ", batch)
+print("Output Shape: ", output.shape)
+print(output)
+
+# Number of model parameter tensors
+total_parameters = sum(p.numel() for p in model.parameters())
+print(f"Total number of parameters: {total_parameters:,}".replace(",", "."))
+print("")
+
+# Use the Text generation loop
+start_context = "Hello, I am"
+encoded_tokens = tokenizer.encode(start_context)
+print("Encoded Tokens: ", encoded_tokens)
+encoded_tensor = torch.tensor(encoded_tokens).unsqueeze(0)
+print("Encoded Tensor shape: ", encoded_tensor.shape)
+
+# Generate new text
+model.eval()
+output = generate_text_simple(model = model, 
+                              idx = encoded_tensor,
+                              max_new_tokens = 6,
+                              context_size = GPT_CONFIG_124M["context_length"])
+print("Output: ", output)
+print("Output length: ", len(output[0]))
+
+# Decode the generated text
+decoded_text = tokenizer.decode(output.squeeze(0).tolist())
+print(decoded_text)
