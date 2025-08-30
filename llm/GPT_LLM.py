@@ -1,4 +1,5 @@
 from LayerNormalization import LayerNormalization
+from TransformerBlock import TransformerBlock
 from DummyGPTModel import DummyGPTModel
 from FeedForward import FeedForward
 import torch.nn as nn
@@ -87,3 +88,19 @@ print(ffn)
 x = torch.rand(2, 3, 768)
 output = ffn(x)
 print(output.shape)
+print("")
+
+####################
+# Transformer Block
+####################
+print("##################")
+print("Transformer Block")
+print("##################")
+torch.manual_seed(123)
+x = torch.rand(2, 4, 768)
+block = TransformerBlock(GPT_CONFIG_124M)
+print(block)
+output = block(x)
+print("Input shape: ", x.shape)
+print("Output shape: ", output.shape)
+print("")
